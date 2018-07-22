@@ -36,6 +36,42 @@ sudo usermod -a -G docker $USER
 
 docker pull jenkins/jenkins
 
-docker run -p 8080:8080 -p 50000:50000 jenkins/jenkins
+sudo chown 1000:1000 /var/jenkins_home/
 
- 
+docker run -d -v /var/jenkins_home:/var/jenkins_home:z -p 8080:8080 -p 50000:50000 --name myjenkins jenkins/jenkins
+
+ubuntu@ip-172-31-37-87:/var/jenkins_home$ ls -lrt
+total 72
+drwxr-xr-x  2 ubuntu ubuntu 4096 Jul 22 08:40 init.groovy.d
+-rw-r--r--  1 ubuntu ubuntu  102 Jul 22 08:40 copy_reference_file.log
+drwxr-xr-x 11 ubuntu ubuntu 4096 Jul 22 08:40 war
+-rw-r--r--  1 ubuntu ubuntu   64 Jul 22 08:40 secret.key
+-rw-r--r--  1 ubuntu ubuntu    0 Jul 22 08:40 secret.key.not-so-secret
+drwxr-xr-x  2 ubuntu ubuntu 4096 Jul 22 08:40 plugins
+drwxr-xr-x  2 ubuntu ubuntu 4096 Jul 22 08:40 jobs
+drwxr-xr-x  2 ubuntu ubuntu 4096 Jul 22 08:40 nodes
+-rw-r--r--  1 ubuntu ubuntu  156 Jul 22 08:40 hudson.model.UpdateCenter.xml
+-rw-------  1 ubuntu ubuntu 1712 Jul 22 08:40 identity.key.enc
+-rw-r--r--  1 ubuntu ubuntu  907 Jul 22 08:40 nodeMonitors.xml
+-rw-r--r--  1 ubuntu ubuntu    5 Jul 22 08:40 jenkins.install.UpgradeWizard.state
+drwxr-xr-x  2 ubuntu ubuntu 4096 Jul 22 08:40 userContent
+drwxr-xr-x  3 ubuntu ubuntu 4096 Jul 22 08:40 logs
+drwxr-xr-x  3 ubuntu ubuntu 4096 Jul 22 08:40 users
+-rw-r--r--  1 ubuntu ubuntu   94 Jul 22 08:40 jenkins.CLI.xml
+drwx------  4 ubuntu ubuntu 4096 Jul 22 08:40 secrets
+-rw-r--r--  1 ubuntu ubuntu 1638 Jul 22 08:40 config.xml
+drwxr-xr-x  2 ubuntu ubuntu 4096 Jul 22 08:40 updates
+
+
+ubuntu@ip-172-31-37-87:/var/jenkins_home$ cd secrets/
+ubuntu@ip-172-31-37-87:/var/jenkins_home/secrets$ ls -lrt
+total 28
+-rw-r--r-- 1 ubuntu ubuntu  256 Jul 22 08:40 master.key
+-rw-r--r-- 1 ubuntu ubuntu  272 Jul 22 08:40 org.jenkinsci.main.modules.instance_identity.InstanceIdentity.KEY
+-rw-r--r-- 1 ubuntu ubuntu   32 Jul 22 08:40 jenkins.model.Jenkins.crumbSalt
+drwxr-xr-x 2 ubuntu ubuntu 4096 Jul 22 08:40 whitelisted-callables.d
+drwxr-xr-x 2 ubuntu ubuntu 4096 Jul 22 08:40 filepath-filters.d
+-rw-r----- 1 ubuntu ubuntu   33 Jul 22 08:40 initialAdminPassword
+-rw-r--r-- 1 ubuntu ubuntu    5 Jul 22 08:40 slave-to-master-security-kill-switch
+ubuntu@ip-172-31-37-87:/var/jenkins_home/secrets$ cat initialAdminPassword
+dfd280926c4346e9996f8bb240044004
