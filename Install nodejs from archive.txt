@@ -1,0 +1,27 @@
+Install nodejs on windows using archive file
+
+Know your architecture, and download right archive file.
+
+C:\Users\blockC>wmic OS get OSarchitecture
+OSArchitecture
+64-bit
+
+extract nodejs from the archive and place in appropriate location.
+i put it in F:\users\blockC\
+node.exe is available under - F:\users\blockC\node-v16.14.2-win-x64
+Now add F:\users\blockC\node-v16.14.2-win-x64 to user path.
+
+setx path "%path%;F:\users\blockC\node-v16.14.2-win-x64"
+Note that the double quotes are required
+Careful when using setx. it can mess things.
+
+C:\Users\blockC>node --version
+v16.14.2
+
+C:\Users\blockC>node -v
+v16.14.2
+
+C:\Users\blockC>npm -v
+8.5.0
+
+C:\Users\blockC>

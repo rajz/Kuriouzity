@@ -1,0 +1,5 @@
+Installation and setting up env for https://www.udemy.com/course/build-blockchain/
+
+I am working on a machine with windows10. 
+I prefer dev work on linux like machine, therefore installed ubuntu on a virtual box
+
