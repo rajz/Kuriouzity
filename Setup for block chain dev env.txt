@@ -1,5 +1,56 @@
 Installation and setting up env for https://www.udemy.com/course/build-blockchain/
 
-I am working on a machine with windows10. 
-I prefer dev work on linux like machine, therefore installed ubuntu on a virtual box
+
+F:\users\blockC>mkdir udemy
+
+F:\users\blockC>cd udemy
+
+F:\users\blockC\udemy>mkdir build-blockchain
+
+F:\users\blockC\udemy>cd build-blockchain
+
+F:\users\blockC\udemy\build-blockchain>
+
+F:\users\blockC\udemy\build-blockchain>npm init -y
+Wrote to F:\users\blockC\udemy\build-blockchain\package.json:
+
+{
+  "name": "build-blockchain",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+
+F:\users\blockC\udemy\build-blockchain>npm i nodemon --save-dev
+
+added 115 packages, and audited 116 packages in 8s
+
+16 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+package.json after nodemon installation -
+
+{
+  "name": "build-blockchain",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
 
