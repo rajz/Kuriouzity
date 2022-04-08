@@ -25,3 +25,7 @@ C:\Users\blockC>npm -v
 8.5.0
 
 C:\Users\blockC>
+
+Following resources on the net were helpful in being able to complete the tasks
+https://www.tutorialkart.com/nodejs/install-nodejs-on-windows/
+https://www.windows-commandline.com/set-path-command-line/
