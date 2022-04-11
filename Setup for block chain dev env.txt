@@ -54,3 +54,12 @@ package.json after nodemon installation -
   }
 }
 
+
+https://stackoverflow.com/questions/47083351/node-module-not-found
+remove node from appdata/roaming
+
+finally solved with recommendations at - https://stackoverflow.com/questions/6998355/including-javascript-class-definition-from-another-file-in-node-js
+
+added 
+module.exports = Block 
+to block.js
