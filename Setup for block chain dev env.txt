@@ -1,18 +1,18 @@
+Start here to for a refresher on JS
+https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps
+Learn JS objects here -
+https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Basics
+
 Installation and setting up env for https://www.udemy.com/course/build-blockchain/
 
 
-F:\users\blockC>mkdir udemy
+mkdir udemy
+cd udemy
+mkdir build-blockchain
+cd build-blockchain
+npm init -y
 
-F:\users\blockC>cd udemy
-
-F:\users\blockC\udemy>mkdir build-blockchain
-
-F:\users\blockC\udemy>cd build-blockchain
-
-F:\users\blockC\udemy\build-blockchain>
-
-F:\users\blockC\udemy\build-blockchain>npm init -y
-Wrote to F:\users\blockC\udemy\build-blockchain\package.json:
+Wrote to package.json:
 
 {
   "name": "build-blockchain",
@@ -27,7 +27,7 @@ Wrote to F:\users\blockC\udemy\build-blockchain\package.json:
   "license": "ISC"
 }
 
-F:\users\blockC\udemy\build-blockchain>npm i nodemon --save-dev
+npm i nodemon --save-dev
 
 added 115 packages, and audited 116 packages in 8s
 
@@ -63,3 +63,315 @@ finally solved with recommendations at - https://stackoverflow.com/questions/699
 added 
 module.exports = Block 
 to block.js
+
+Create Genesis block
+
+class Block {
+ constructor(timestamp, lastHash, hash, data) {
+	  this.timestamp = timestamp;
+	  this.lastHash = lastHash;
+	  this.hash = hash;
+	  this.data = data;
+  }
+  toString() {
+		return `Block -
+			  Timestamp : ${this.timestamp}
+			  Last Hash : ${this.lastHash.substring(0, 10)}
+			  Hash      : ${this.hash.substring(0, 10)}
+			  Data      : ${this.data}`;
+  }
+  static genesis() {
+	return new this('Genesis time', '-----', 'f1r57-h45h', []);
+  }
+  
+}
+
+Add mining capability to block.
+
+class Block {
+ constructor(timestamp, lastHash, hash, data) {
+	  this.timestamp = timestamp;
+	  this.lastHash = lastHash;
+	  this.hash = hash;
+	  this.data = data;
+  }
+  toString() {
+		return `Block -
+			  Timestamp : ${this.timestamp}
+			  Last Hash : ${this.lastHash.substring(0, 10)}
+			  Hash      : ${this.hash.substring(0, 10)}
+			  Data      : ${this.data}`;
+  }
+  static genesis() {
+	return new this('Genesis time', '-----', 'f1r57-h45h', []);
+  }
+  
+  static mineBlock(lastBlock, data) {
+	const timestamp = Date.now();
+	const lastHash = lastBlock.hash;
+    const hash = 'todo-hash';
+    return new this(timestamp, lastHash, hash, data);
+  }
+  
+}
+
+module.exports = Block
+
+
+Install crypto package
+
+npm i crypto-js --save
+
+added 1 package, and audited 117 packages in 990ms
+
+16 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+Change code to use hash function
+const SHA256 = require('crypto-js/sha256');
+
+class Block {
+ constructor(timestamp, lastHash, hash, data) {
+	  this.timestamp = timestamp;
+	  this.lastHash = lastHash;
+	  this.hash = hash;
+	  this.data = data;
+  }
+  toString() {
+		return `Block -
+			  Timestamp : ${this.timestamp}
+			  Last Hash : ${this.lastHash.substring(0, 10)}
+			  Hash      : ${this.hash.substring(0, 10)}
+			  Data      : ${this.data}`;
+  }
+  static genesis() {
+	return new this('Genesis time', '-----', 'f1r57-h45h', []);
+  }
+  
+  static mineBlock(lastBlock, data) {
+	const timestamp = Date.now();
+	const lastHash = lastBlock.hash;
+    //const hash = 'todo-hash';
+    const hash = Block.hash(timestamp, lastHash, data);
+	return new this(timestamp, lastHash, hash, data);
+  }
+
+  static hash(timestamp, lastHash, data) {
+	return SHA256(`${timestamp}${lastHash}${data}`).toString();
+  }
+  
+}
+
+module.exports = Block
+
+
+Testing blockchain
+
+Install jest. More about jest - https://jestjs.io/docs/getting-started
+
+npm i jest --save-dev
+
+npm run test
+
+ PASS  ./block.test.js
+  Block
+    √ sets the `data` to match the input (4 ms)
+    √ sets the `lastHash` to match the hash of the last block
+
+Test Suites: 1 passed, 1 total
+Tests:       2 passed, 2 total
+Snapshots:   0 total
+Time:        0.347 s, estimated 1 s
+Ran all test suites.
+
+Watch Usage: Press w to show more.
+
+
+Build a chain of blocks.
+
+//section 3 exercise
+
+const Block = require('./block');
+
+class Blockchain {
+  constructor() {
+    this.chain = [Block.genesis()];
+  }
+
+  addBlock(data) {
+    const block = Block.mineBlock(this.chain[this.chain.length-1], data);
+    this.chain.push(block);
+    return block;
+  }
+}
+
+Test suite 
+//test blockchain
+
+const Blockchain = require('./blockchain');
+const Block = require('./block');
+
+describe('Blockchain', () => {
+  let bc;
+  beforeEach(() => {
+    bc = new Blockchain();
+  });
+
+  it('starts with the genesis block', () => {
+	  expect(bc.chain[0]).toEqual(Block.genesis());
+  });
+
+  it('adds a new block', () => {
+    const data = 'foo';
+    bc.addBlock(data);
+    expect(bc.chain[bc.chain.length-1].data).toEqual(data);
+  });
+});
+
+
+Run tests 
+
+ PASS  ./block.test.js
+ PASS  ./blockchain.test.js
+
+Test Suites: 2 passed, 2 total
+Tests:       4 passed, 4 total
+Snapshots:   0 total
+Time:        1.63 s, estimated 2 s
+Ran all test suites.
+
+Watch Usage: Press w to show more.
+
+Add code to validate the chain
+//section 3 exercise
+
+const Block = require('./block');
+
+class Blockchain {
+  constructor() {
+    this.chain = [Block.genesis()];
+  }
+
+  addBlock(data) {
+    const block = Block.mineBlock(this.chain[this.chain.length-1], data);
+    this.chain.push(block);
+    return block;
+  }
+
+
+  isValidChain(chain) {
+	  if (JSON.stringify(chain[0]) !== JSON.stringify(Block.genesis())) return false;
+	  for (let i=1; i<chain.length; i++) {
+		const block = chain[i];
+		const lastBlock = chain[i-1];
+		if (
+		  block.lastHash !== lastBlock.hash ||
+		  block.hash !== Block.blockHash(block)
+		) {
+		  return false;
+		}
+	  }
+    return true;
+  }
+}
+
+module.exports = Blockchain
+
+Update block.js
+
+const SHA256 = require('crypto-js/sha256');
+
+class Block {
+ constructor(timestamp, lastHash, hash, data) {
+	  this.timestamp = timestamp;
+	  this.lastHash = lastHash;
+	  this.hash = hash;
+	  this.data = data;
+  }
+  toString() {
+		return `Block -
+			  Timestamp : ${this.timestamp}
+			  Last Hash : ${this.lastHash.substring(0, 10)}
+			  Hash      : ${this.hash.substring(0, 10)}
+			  Data      : ${this.data}`;
+  }
+  static genesis() {
+	return new this('Genesis time', '-----', 'f1r57-h45h', []);
+  }
+  
+  static mineBlock(lastBlock, data) {
+	const timestamp = Date.now();
+	const lastHash = lastBlock.hash;
+    //const hash = 'todo-hash';
+    const hash = Block.hash(timestamp, lastHash, data);
+	return new this(timestamp, lastHash, hash, data);
+  }
+
+  static hash(timestamp, lastHash, data) {
+	return SHA256(`${timestamp}${lastHash}${data}`).toString();
+  }
+  
+  static blockHash(block) {
+	const { timestamp, lastHash, data } = block;
+  return Block.hash(timestamp, lastHash, data);
+  }
+  
+}
+
+module.exports = Block
+
+
+//test blockchain
+
+const Blockchain = require('./blockchain');
+const Block = require('./block');
+
+describe('Blockchain', () => {
+  let bc,bc2;
+  beforeEach(() => {
+    bc = new Blockchain();
+	bc2 = new Blockchain();
+  });
+
+  it('starts with the genesis block', () => {
+	  expect(bc.chain[0]).toEqual(Block.genesis());
+  });
+
+  it('adds a new block', () => {
+    const data = 'foo';
+    bc.addBlock(data);
+    expect(bc.chain[bc.chain.length-1].data).toEqual(data);
+  });
+  it('validates a valid chain', () => {
+	bc2.addBlock('foo');
+	expect(bc.isValidChain(bc2.chain)).toBe(true);
+  });
+  it('invalidates a chain with a corrupt genesis block', () => {
+	  bc2.chain[0].data = 'Bad data';
+	  expect(bc.isValidChain(bc2.chain)).toBe(false);
+  });
+
+  it('invalidates a corrupt chain', () => {
+	  bc2.addBlock('foo');
+	  bc2.chain[1].data = 'Not foo';
+	  expect(bc.isValidChain(bc2.chain)).toBe(false);
+  });
+});
+
+
+Test results
+
+Watch Usage: Press w to show more.
+ PASS  ./block.test.js
+ PASS  ./blockchain.test.js
+
+Test Suites: 2 passed, 2 total
+Tests:       7 passed, 7 total
+Snapshots:   0 total
+Time:        1.69 s, estimated 2 s
+Ran all test suites.
+
+Watch Usage: Press w to show more.
+
